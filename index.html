@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Votación y Videoconferencia</title>
+  
+  <!-- Estilo CSS para hacer la interfaz adaptativa -->
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      display: flex;
+    }
+
+    /* Estilo del contenedor principal dividido en 2 partes */
+    .container {
+      display: flex;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Iframe del panel lateral izquierdo (votación) */
+    .votacion-panel {
+      width: 30%;  /* Puedes ajustar el tamaño del panel aquí */
+      min-width: 300px;
+      background-color: #f1f1f1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    /* Contenedor para la videoconferencia */
+    #jaas-container {
+      flex-grow: 1;
+      height: 100%;
+    }
+
+    /* Estilo para los botones de votación */
+    button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .resultado {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+  </style>
+
+  <!-- Jitsi API -->
+  <script src="https://8x8.vc/vpaas-magic-cookie-f6824533bb164d58a615b5624cd75181/external_api.js" async></script>
+
+  <script type="text/javascript">
+    window.onload = () => {
+      // Inicializa Jitsi
+      const api = new JitsiMeetExternalAPI("8x8.vc", {
+        roomName: "vpaas-magic-cookie-f6824533bb164d58a615b5624cd75181/SampleAppExperiencedBishopsGlanceUndoubtedly",
+        parentNode: document.querySelector('#jaas-container')
+      });
+
+      // Variables de votación
+      let votos = { tipo1: 0, tipo2: 0, tipo3: 0 };
+      const resultadoDiv = document.getElementById('resultado');
+
+      // Función para manejar los votos
+      function votar(tipo) {
+        votos[tipo]++;
+        mostrarResultados();
+      }
+
+      // Función para mostrar los resultados
+      function mostrarResultados() {
+        resultadoDiv.innerHTML = `
+          <p>Votos Tipo 1: ${votos.tipo1}</p>
+          <p>Votos Tipo 2: ${votos.tipo2}</p>
+          <p>Votos Tipo 3: ${votos.tipo3}</p>
+        `;
+      }
+
+      // Asignar eventos a los botones
+      document.getElementById('votar-tipo1').onclick = () => votar('tipo1');
+      document.getElementById('votar-tipo2').onclick = () => votar('tipo2');
+      document.getElementById('votar-tipo3').onclick = () => votar('tipo3');
+    };
+  </script>
+</head>
+<body>
+  <div class="container">
+    <!-- Panel de votación -->
+    <div class="votacion-panel">
+      <h2>Votación por Coeficiente</h2>
+      <p>Elige el tipo de apartamento para votar:</p>
+      <button id="votar-tipo1">Votar Tipo 1</button>
+      <button id="votar-tipo2">Votar Tipo 2</button>
+      <button id="votar-tipo3">Votar Tipo 3</button>
+
+      <div class="resultado" id="resultado">
+        <p>Resultados de la votación aparecerán aquí.</p>
+      </div>
+    </div>
+
+    <!-- Contenedor para Jitsi -->
+    <div id="jaas-container"></div>
+  </div>
+</body>
+</html>
